@@ -1,94 +1,85 @@
-# Bungalow Take Home Project for Backend Developer Role
+# Bungalow Take Home Project for Data Engineer Role (V1. 2021-06-29)
 
-## About This Project
-This is a Django based assignment. We have created a base project for you to work from. 
-You are free to vary from our original base if you would like to. We provide it with the intention of providing 
-a common base for all candidates to work from and to hopefully save you a bit of time. 
+Welcome to the Bungalow Takehome Challenge for Data Engineering! This is a barebone repo to get you started.
 
-If you need an introduction to Django, their docs are an excellent place to start: https://docs.djangoproject.com/en/3.2
+## What to build
 
-We encourage you to use the Django Rest Framework for developing your API. This is a framework that we use extensively 
-at Bungalow, and it provides some nice functionality out of the box. https://www.django-rest-framework.org/
+A common task for data engineers at Bungalow involves the handling of raw data, modelling data, storing it and making it available for downstream
+teams such as analytics, data science and ultimately the entire organization.
 
-## What to Build
-We would like you to build an API that can be used to query some information about houses.
-Sample data is provided in the `sample-data` folder.
-We have provided the stub for a Django command to import the data. Finish writing this code.
-You should use Django's ORM to model the data and store it in a local database.
-Then, utilize the Django Rest Framework to provide an API to query the models.
-A very basic API design here would simply return all of the data available.
-You can choose to improve and refine this very basic API design, and we encourage you to do so.
-This will give us an opportunity to see how you approach API design.
-If you are running out of time, you can outline how you would have done things differently given more time.
+For this challenge we'd like to give a brief snapshot of a common workload may entail.
 
+With the sample data in `sample-data/data.csv` we would like you to:
 
-## How Will This Be Evaluated
-We will use this project as our basis for our evaluation of your coding skill level as it relates to our team.
+1. Create a script to process and clean the data
+2. Ingest the data into a relational database of your choice, considering relationships, integrity, performance, and extendability
+3. Write a SQL query, or python script, of your choice, computing something you find interesting on top of the data, store this in a file `query.sql` (or `query.py`)
+
+This project is meant to be flexible as to showcase your decision making capabilities and your overall technical experience.
+As long as you can acheive the outcome feel free to use any additional tooling and approach you see fit - we just ask that you use Python 🐍 for
+the scripting and a SQL database as your data store (e.g SQLite, or Docker + Postgres as an example)
+
+We are more interested in seeing your thought process and approach to solving the problem!
+
+## Evaluation
+
+We will use this project as our basis for our evaluation of your overall fit for a data engineering role from a techinical viewpoint.
+
 To do this, we will review your code with an eye for the following:
 
-- Design Choices - choice of functionality, readability, maintainability, extendability, appropriate use of language/framework features
-- Does it work as outlined
-- Testing - have you considered how you'd test your code?
-- Documentation - have you provided context around decisions and assumptions that you have made?
-- Polish - have you produced something that would be ready to go into a production system?
-  if not, have you clearly stated what would be needed to get from where it is to that level of polish?
+- Readability and usability
+- Data processing and relational modelling
+- Python and SQL know-how
 
-## Time Expectations
+## Time expectations
+
 We know you are busy and likely have other commitments in your life, so we don't want to take too much of your time.
-We don't expect you to spend more than 2 hours working on this project. That being said, if you choose to put more or
-less time into it for whatever reason, that is your choice. Feel free to indicate in your notes below if you worked on
-this for a different amount of time and we will keep that in mind while evaluating the project. You can also provide us
-with additional context if you would like to. Additionally, we have left a spot below for you to note. If you have ideas 
-for pieces that you would have done differently or additional things you would have implemented if you had more time, 
-you can indicate those in your notes below as well, and we will use those as part of the evaluation. For example, if you 
-would have tested more, you can describe the tests that you would have written, and just provide 1 or 2 actual implemented
-tests.
+We don't expect you to spend more than `2 hours` working on this project. That being said, if you choose to put more or
+less time into it for whatever reason, that is your choice.
 
-## Public Forks
+Feel free to indicate in your notes below if you worked on this for a different amount of time and we will keep that
+in mind while evaluating the project. You can also provide us with additional context if you would like to.
+
+Additionally, we have left a spot below for you to note. If you have ideas for pieces that you would have done differently
+or additional things you would have implemented if you had more time, you can indicate those in your notes below as well,
+and we will use those as part of the evaluation.
+
+## Public forks
+
 We encourage you to try this project without looking at the solutions others may have posted. This will give the most
-honest representation of your abilities and skills. However, we also recognize that day-to-day programming often involves 
-looking at solutions others have provided and iterating on them. Being able to pick out the best parts and truly 
-understand them well enough to make good choices about what to copy and what to pass on by is a skill in and of itself. 
-As such, if you do end up referencing someone else's work and building upon it, we ask that you note that as a comment. 
-Provide a link to the source so we can see the original work and any modifications that you chose to make. 
+honest representation of your abilities and skills. However, we also recognize that day-to-day programming often involves
+looking at solutions others have provided and iterating on them. Being able to pick out the best parts and truly
+understand them well enough to make good choices about what to copy and what to pass on by is a skill in and of itself.
+As such, if you do end up referencing someone else's work and building upon it, we ask that you note that as a comment.
+Provide a link to the source so we can see the original work and any modifications that you chose to make.
 
-## Setup Instructions
-1. Fork this repository and clone to your local environment. If you make your fork private, 
-1. Install a version of Python 3 if you do not already have one. We recommend Python 3.8 or newer.
-1. You can use the built-in virtual environment creation within Python to create a sandboxed set of package installs. 
-   If you already have a preferred method of virtualenv creation, feel free to proceed with your own method. 
-   `python -m venv env`    
-1. You will need to activate your virtual environment each time you want to work on your project. 
-   Run the `activate` script within the `env/bin` folder that was generated.
-1. We have provided a `requirements.txt` file you can use to install the necessary packages.
-   With your virtualenv activated run: `pip install -r requirements.txt`
-1. To run the django server run `python manage.py runserver`
-1. To run the data import command run `python manage.py import_house_data`
-1. You are now setup and ready to start coding. 
+## Challenge instructions
 
+1. Fork this repository and clone to your local environment
+1. Prepare your environment with Python and any other tools you may need
+1. Complete the challenge and push back to the repo
 
-# Your Notes
-*TODO: Add your documentation here* 
+---
 
-## Time Spent
-*Give us a rough estimate of the time you spent working on this. If you spent time learning in order to do this project please feel free to let us know that too.*
-*This makes sure that we are evaluating your work fairly and in context. It also gives us the opportunity to learn and adjust our process if needed.*
+# Your notes
+
+_Add any additional notes / documentation here_
+
+## Time spent
+
+_Give us a rough estimate of the time you spent working on this. If you spent time learning in order to do this project please feel free to let us know that too._
+_This makes sure that we are evaluating your work fairly and in context. It also gives us the opportunity to learn and adjust our process if needed._
 
 ## Assumptions
-*Did you find yourself needing to make assumptions to finish this?*
-*If so, what were they and how did they impact your design/code?*
 
+_Did you find yourself needing to make assumptions to finish this?_
+_If so, what were they and how did they impact your design/code?_
 
-## Next Steps
-*Provide us with some notes about what you would do next if you had more time.* 
-*Are there additional features that you would want to add? Specific improvements to your code you would make?*
-### Features
+## Next steps
 
-### Testing
+_Provide us with some notes about what you would do next if you had more time._
+_Are there additional features that you would want to add? Specific improvements to your code you would make?_
 
-### Anything else needed to make this production ready?
+## Instructions to the evaluator
 
-
-## How to Use
-*Provide any end user documentation you think is necessary and useful here*
-
+_Provide any end user documentation you think is necessary and useful here_
