@@ -1,6 +1,6 @@
 # Bungalow Take Home Project for Data Engineer Role (V1. 2021-06-29)
 
-Welcome to the Bungalow Takehome Challenge for Data Engineering! This is a barebone repo to get you started.
+Welcome to the Bungalow Takehome Challenge for Data Engineering! This is a barebones repo to get you started.
 
 ## What to build
 
@@ -16,14 +16,14 @@ With the sample data in `sample-data/data.csv` we would like you to:
 3. Write a SQL query, or python script, of your choice, computing something you find interesting on top of the data, store this in a file `query.sql` (or `query.py`)
 
 This project is meant to be flexible as to showcase your decision making capabilities and your overall technical experience.
-As long as you can acheive the outcome feel free to use any additional tooling and approach you see fit - we just ask that you use Python 🐍 for
+As long as you can achieve the outcome feel free to use any additional tooling and approach you see fit - we just ask that you use Python 🐍 for
 the scripting and a SQL database as your data store (e.g SQLite, or Docker + Postgres as an example)
 
 We are more interested in seeing your thought process and approach to solving the problem!
 
 ## Evaluation
 
-We will use this project as our basis for our evaluation of your overall fit for a data engineering role from a techinical viewpoint.
+We will use this project as our basis for our evaluation of your overall fit for a data engineering role from a technical viewpoint.
 
 To do this, we will review your code with an eye for the following:
 
@@ -34,7 +34,7 @@ To do this, we will review your code with an eye for the following:
 ## Time expectations
 
 We know you are busy and likely have other commitments in your life, so we don't want to take too much of your time.
-We don't expect you to spend more than `2 hours` working on this project. That being said, if you choose to put more or
+We don't expect you to spend more than **2 hours** working on this project. That being said, if you choose to put more or
 less time into it for whatever reason, that is your choice.
 
 Feel free to indicate in your notes below if you worked on this for a different amount of time and we will keep that
