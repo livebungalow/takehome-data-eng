@@ -9,7 +9,7 @@ teams such as analytics, data science and ultimately the entire organization.
 
 For this challenge we'd like to give a brief snapshot of a common workload may entail.
 
-With the sample data in `sample-data/data.csv` we would like you to:
+With the sample data in `sample-data.tar.gz` we would like you to:
 
 1. Create a script to process and clean the data
 2. Ingest the data into a relational database of your choice, considering relationships, integrity, performance, and extendability
