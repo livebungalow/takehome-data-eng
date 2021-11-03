@@ -82,7 +82,7 @@ Fork this repository and clone to your local environment
       # You can see the Airflow UI in http://localhost:8080 with username/password: airflow
       ```
   - If you run to any problems with the environment, please refer to [here](https://airflow.apache.org/docs/apache-airflow/stable/start/docker.html).
-- Fill in the TODO parts in the DAGs.
+- Fill in the TODO in the repository. There are currently 6 TODOS, but you can go beyond and above.
   - Any problems with the DAGs? They are taken from [here](https://airflow.apache.org/docs/apache-airflow/stable/tutorial.html). Please take a look at the rest of tutorial if needed.
   - You can check Postgres operator from [here](https://airflow.apache.org/docs/apache-airflow-providers-postgres/stable/operators/postgres_operator_howto_guide.html)
   - To keep it simple, let's use the Airflow database for the storage of your dataset
@@ -90,8 +90,8 @@ Fork this repository and clone to your local environment
 - Complete the challenge and push back to the repo
   - If you have any questions in any step, please reach out to your recruiter. A member of engineering team will be involved to support you, as if you were working for Bungalow.
 
-## Your notes (Readme.md)
-Add any additional notes / documentation here
+## Your notes (Readme.md) 
+@TODO: Add any additional notes / documentation in this file.
 
 ### Time spent
 Give us a rough estimate of the time you spent working on this. If you spent time learning in order to do this project please feel free to let us know that too. This makes sure that we are evaluating your work fairly and in context. It also gives us the opportunity to learn and adjust our process if needed.
