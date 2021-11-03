@@ -1,11 +1,11 @@
 from datetime import datetime, timedelta
-from textwrap import dedent
+import time
 
 # The DAG object; we'll need this to instantiate a DAG
 from airflow import DAG
 
 # Operators; we need this to operate!
-from airflow.operators.bash import BashOperator
+from airflow.operators.python import PythonOperator
 from airflow.providers.postgres.operators.postgres import PostgresOperator
 
 # These args will get passed on to each operator
@@ -29,15 +29,21 @@ with DAG(
         tags=['take-home'],
 ) as dag:
 
-    # @TODO: Remove or replace with Python Operator. Hint: How to fetch the weather data from https://www.aerisweather.com/?
-    t1 = BashOperator(
-        task_id='print_date',
-        bash_command='date',
+    # @TODO: Add your function here. Example here: https://airflow.apache.org/docs/apache-airflow/stable/_modules/airflow/example_dags/example_python_operator.html
+    # Hint: How to fetch the weather data from https://www.aerisweather.com/?
+    def my_sleeping_function(random_base):
+        """This is a function that will run within the DAG execution"""
+        time.sleep(random_base)
+
+    t1 = PythonOperator(
+        task_id='ingest_api_data',
+        python_callable=my_sleeping_function,
+        op_kwargs={'random_base': 101.0 / 10},
     )
 
     # @TODO: Fill in the below
     t2 = PostgresOperator(
-        task_id="Create raw data table",
+        task_id="create_raw_dataset",
         sql="""
             CREATE TABLE IF NOT EXISTS raw_current_weather (
            );
@@ -46,7 +52,7 @@ with DAG(
 
     # @TODO: Fill in the below
     t3 = PostgresOperator(
-        task_id="store the data in the table",
+        task_id="store_dataset",
         sql="""
             INSERT INTO ...
           """,

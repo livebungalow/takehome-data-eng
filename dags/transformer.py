@@ -1,11 +1,9 @@
 from datetime import datetime, timedelta
-from textwrap import dedent
 
 # The DAG object; we'll need this to instantiate a DAG
 from airflow import DAG
 
 # Operators; we need this to operate!
-from airflow.operators.bash import BashOperator
 from airflow.providers.postgres.operators.postgres import PostgresOperator
 
 # These args will get passed on to each operator
@@ -29,7 +27,7 @@ with DAG(
 
     # @TODO: Fill in the below
     t1 = PostgresOperator(
-        task_id="Create modelled data table(s)",
+        task_id="create_modeled_dataset_table",
         sql="""
             CREATE TABLE IF NOT EXISTS current_weather (
            );
@@ -38,7 +36,7 @@ with DAG(
 
     # @TODO: Fill in the below
     t2 = PostgresOperator(
-        task_id="create ",
+        task_id="transform_raw_into_modelled",
         sql="""
             SELECT * FROM raw_current_weather ...
           """,
