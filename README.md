@@ -5,11 +5,11 @@ Welcome to the Bungalow Takehome Challenge for Data Engineering! This is a bareb
 ## What to build
 A common task for data engineers at Bungalow involves the integration of the of third-party data, modelling data, storing it and making it available for downstream teams such as analytics, data science and ultimately the entire organization.
 
-For this test we will collect the (current weather data)[] from [OpenWeatherMap](). The free API will work for this assignment. You shouldn’t pay for the API.
+For this test we will collect the (current weather data)[https://openweathermap.org/current] from [OpenWeatherMap](https://openweathermap.org/). The free API will work for this assignment. You shouldn’t pay for the API.
 
 For this challenge we'd like to give a brief snapshot of a common workload may entail. Of course, this might become a big task. Therefore to save time for you, we did some of the heavy lifting, like the set up and some scaffolding of the environment.
 
-Please install [Docker Desktop]() on your laptop. It will contain the environment that we would need for the next steps.
+Please install [Docker Desktop](https://www.docker.com/get-started) on your laptop. It will contain the environment that we would need for the next steps.
 
 The Docker compose would have two software applications and simple setup required for them.
 
