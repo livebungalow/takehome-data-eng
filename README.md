@@ -89,7 +89,7 @@ Fork this repository and clone to your local environment
 - Write down the notes, in the Readme.md file.
 - Complete the challenge and push back to the repo
   - If you have any questions in any step, please reach out to your recruiter. A member of engineering team will be involved to support you, as if you were working for Bungalow.
-- *Note:* If you are using Apple hardware with M1 processor, there is a common challenge with Docker. You can read more about [here](https://javascript.plainenglish.io/which-docker-images-can-you-use-on-the-mac-m1-daba6bbc2dc5).
+- **Note:** If you are using Apple hardware with M1 processor, there is a common challenge with Docker. You can read more about it [here](https://javascript.plainenglish.io/which-docker-images-can-you-use-on-the-mac-m1-daba6bbc2dc5).
 
 ## Your notes (Readme.md) 
 @TODO: Add any additional notes / documentation in this file.
