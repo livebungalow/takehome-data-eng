@@ -30,7 +30,7 @@ with DAG(
 ) as dag:
 
     # @TODO: Add your function here. Example here: https://airflow.apache.org/docs/apache-airflow/stable/_modules/airflow/example_dags/example_python_operator.html
-    # Hint: How to fetch the weather data from https://www.aerisweather.com/?
+    # Hint: How to fetch the weather data from OpenWeatherMap?
     def my_sleeping_function(random_base):
         """This is a function that will run within the DAG execution"""
         time.sleep(random_base)
