@@ -32,7 +32,7 @@ Below are the steps in the data flow diagram:
 
 This project is meant to be flexible as to showcase your decision making capabilities and your overall technical experience. 
 
-**Note:** If you are uncomfortable with Docker, Postgres or Airflow, please feel free to remove or replace them. They are meant to save time for you. As long as you can achieve the outcome feel free to use any additional tooling, programming language (i.e. Java or Scala) and approach you see fit. We will ask follow questions about your decision mechanism in the follow up conversation.
+**Note:** If you are uncomfortable with Docker, Postgres or Airflow, please feel free to remove or replace them. They are meant to save time for you. As long as you can achieve the outcome feel free to use any additional tooling, programming language (i.e. Java or Scala) and approach you see fit. We will ask follow up questions about your decision mechanism in the follow up conversation.
 
 We are more interested in seeing your thought process and approach to solving the problem!
 
