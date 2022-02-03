@@ -4,10 +4,9 @@ Welcome to the Bungalow Takehome Challenge for Data Engineering! This is a bareb
 
 ## What to build
 A common task for data engineers at Bungalow involves the integration of the of third-party data, modelling data, storing it and making it available for downstream teams such as analytics, data science and ultimately the entire organization.
+For this challenge we'd like to give a brief snapshot of a common workload may entail. Of course, this might become a big task. Therefore, to save time for you, we did some of the heavy lifting, like the set up and some scaffolding of the environment.
 
-For this test we will collect the (current weather data)[https://openweathermap.org/current] from [OpenWeatherMap](https://openweathermap.org/). The free API will work for this assignment. You shouldn’t pay for the API.
-
-For this challenge we'd like to give a brief snapshot of a common workload may entail. Of course, this might become a big task. Therefore to save time for you, we did some of the heavy lifting, like the set up and some scaffolding of the environment.
+For this test we will collect the [current weather data](https://openweathermap.org/current) from [OpenWeatherMap](https://openweathermap.org/). The free API will work for this assignment. You shouldn’t pay for the API.
 
 Please install [Docker Desktop](https://www.docker.com/get-started) on your laptop. It will contain the environment that we would need for the next steps.
 
@@ -32,7 +31,8 @@ Below are the steps in the data flow diagram:
 
 
 This project is meant to be flexible as to showcase your decision making capabilities and your overall technical experience. 
-If you are uncomfortable with Docker, Postgres or Airflow, please feel free to remove or replace them. They are meant to be a starting point for you. As long as you can achieve the outcome feel free to use any additional tooling and approach you see fit. We will ask follow questions about your decision mechanism in the follow up conversation.
+
+**Note:** If you are uncomfortable with Docker, Postgres or Airflow, please feel free to remove or replace them. They are meant to save time for you. As long as you can achieve the outcome feel free to use any additional tooling, programming language (i.e. Java or Scala) and approach you see fit. We will ask follow up questions about your decision mechanism in the follow up conversation.
 
 We are more interested in seeing your thought process and approach to solving the problem!
 
@@ -89,6 +89,7 @@ Fork this repository and clone to your local environment
 - Write down the notes, in the Readme.md file.
 - Complete the challenge and push back to the repo
   - If you have any questions in any step, please reach out to your recruiter. A member of engineering team will be involved to support you, as if you were working for Bungalow.
+- **Note:** If you are using Apple hardware with M1 processor, there is a common challenge with Docker. You can read more about it [here](https://javascript.plainenglish.io/which-docker-images-can-you-use-on-the-mac-m1-daba6bbc2dc5).
 
 ## Your notes (Readme.md) 
 @TODO: Add any additional notes / documentation in this file.
