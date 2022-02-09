@@ -6,7 +6,7 @@ import requests
 from airflow import DAG
 
 # Operators; we need this to operate!
-from airflow.operators.python import PythonOperator
+from aiwsl ubunturflow.operators.python import PythonOperator
 from airflow.providers.postgres.operators.postgres import PostgresOperator
 
 # These args will get passed on to each operator
@@ -36,11 +36,7 @@ with DAG(
                 'wind_speed', 'wind_deg', 'wind_gust', 'clouds_all', 'dt', 'sys_type', 'sys_id', 'sys_country', 
                 'sys_sunrise', 'sys_sunset', 'timezone', 'name', 'id', 'cod'
     )
-    values = (response['coord']['lat'], response['coord']['lon'], response['weather']['id'], response['weather']['main'], response['weather']['description'],
-                 response['weather']['icon'], response['base'], response['main']['temp'], response['main']['feels_like'], response['main']['temp_min'], response['main']['temp_max'], 
-                 response['main']['pressure'], response['main']['humidity'], response['visibility'], response['wind']['speed'], response['wind']['deg'], response['wind']['gust'],
-                 response['clouds']['all'], response['dt'], response['sys']['type'], response['sys']['id'], response['sys']['country'], response['sys']['sunrise'], response['sys']['sunset'],
-                 response['timezone'], response['id'], response['name'], response['cod'])
+    values = ()
 
     # @TODO: Add your function here. Example here: https://airflow.apache.org/docs/apache-airflow/stable/_modules/airflow/example_dags/example_python_operator.html
     # Hint: How to fetch the weather data from OpenWeatherMap?
@@ -50,6 +46,11 @@ with DAG(
         url = "http://api.openweathermap.org/data/2.5/weather?lat=35&lon=139&appid="
         api_key = "07349c660844361dd5bff04302472bd7"
         response = dict(requests.get(url+api_key).json())
+        values = (response['coord']['lat'], response['coord']['lon'], response['weather']['id'], response['weather']['main'], response['weather']['description'],
+                 response['weather']['icon'], response['base'], response['main']['temp'], response['main']['feels_like'], response['main']['temp_min'], response['main']['temp_max'], 
+                 response['main']['pressure'], response['main']['humidity'], response['visibility'], response['wind']['speed'], response['wind']['deg'], response['wind']['gust'],
+                 response['clouds']['all'], response['dt'], response['sys']['type'], response['sys']['id'], response['sys']['country'], response['sys']['sunrise'], response['sys']['sunset'],
+                 response['timezone'], response['id'], response['name'], response['cod'])
         return response
 
     t1 = PythonOperator(
