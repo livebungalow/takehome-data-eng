@@ -30,6 +30,18 @@ with DAG(
         task_id="create_modeled_dataset_table",
         sql="""
             CREATE TABLE IF NOT EXISTS current_weather (
+            id INT, 
+            dt BIGINT, 
+            timezone INT,
+            lat FLOAT, 
+            lon FLOAT, 
+            country VARCHAR, 
+            temp FLOAT, 
+            pressure FLOAT, 
+            humidity FLOAT,
+            weather_description VARCHAR, 
+            visibility INT,
+            PRIMARY KEY (id)
            );
           """,
     )
@@ -38,7 +50,9 @@ with DAG(
     t2 = PostgresOperator(
         task_id="transform_raw_into_modelled",
         sql="""
-            SELECT * FROM raw_current_weather ...
+            INSERT INTO current_weather (id, dt, timezone, lat, lon, country, temp, pressure, humidity, weather_description, visibility) 
+            SELECT (id, dt, timezone, lat, lon, country, temp, pressure, humidity, weather_description, visibility) 
+            FROM raw_current_weather
           """,
     )
     t1 >> t2
