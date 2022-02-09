@@ -6,7 +6,7 @@ import requests
 from airflow import DAG
 
 # Operators; we need this to operate!
-from aiwsl ubunturflow.operators.python import PythonOperator
+from airflow.operators.python import PythonOperator
 from airflow.providers.postgres.operators.postgres import PostgresOperator
 
 # These args will get passed on to each operator
