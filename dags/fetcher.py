@@ -30,6 +30,7 @@ with DAG(
         tags=['take-home'],
 ) as dag:
     response = dict()
+    # We can use config file to store this 
     columns = (
                 'lat', 'lon', 'weather_id', 'weather_main', 'weather_description', 'weather_icon','base', 'main_temp', 
                 'main_feel_like', 'main_temp_max', 'main_temp_min', 'main_pressure', 'main_humidity', 'visibility', 
@@ -46,6 +47,7 @@ with DAG(
         url = "http://api.openweathermap.org/data/2.5/weather?lat=35&lon=139&appid="
         api_key = "07349c660844361dd5bff04302472bd7"
         response = dict(requests.get(url+api_key).json())
+        # we can implement json schema validation before reading the values into the variable
         values = (response['coord']['lat'], response['coord']['lon'], response['weather']['id'], response['weather']['main'], response['weather']['description'],
                  response['weather']['icon'], response['base'], response['main']['temp'], response['main']['feels_like'], response['main']['temp_min'], response['main']['temp_max'], 
                  response['main']['pressure'], response['main']['humidity'], response['visibility'], response['wind']['speed'], response['wind']['deg'], response['wind']['gust'],
@@ -99,6 +101,7 @@ with DAG(
     # @TODO: Fill in the below
     t3 = PostgresOperator(
         task_id="store_dataset",
+        # we have to make sure the string parsing is done correcly by including the escapes
         sql=f'INSERT INTO raw_current_weather {columns} VALUES {values}',
     )
 
