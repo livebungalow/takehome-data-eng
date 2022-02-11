@@ -93,6 +93,10 @@ Fork this repository and clone to your local environment
 
 ## Your notes (Readme.md) 
 @TODO: Add any additional notes / documentation in this file.
+1. Use configuration file to store the response schema and store the API key under the env vars.
+2. Use pydantic liabrary to validate the incoming response data
+3. Implement exception handling using the try-catch code blocks
+4. Implement unit test and integration test using sample response data / files
 
 ### Time spent
 Give us a rough estimate of the time you spent working on this. If you spent time learning in order to do this project please feel free to let us know that too. This makes sure that we are evaluating your work fairly and in context. It also gives us the opportunity to learn and adjust our process if needed.
