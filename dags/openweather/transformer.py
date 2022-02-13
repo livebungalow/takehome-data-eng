@@ -16,10 +16,8 @@ with DAG(
     'transformer',
     default_args=default_args,
     description='To transform the raw current weather to a modeled dataset',
-    # Runs same time as the fetcher DAG, but we use
-    # ExternalTaskSensor to ensure dependency order.
     start_date=datetime(2021, 1, 1, 0, 0, 0),
-    schedule_interval="0 */2 * * *",
+    schedule_interval="5 */2 * * *",
     catchup=False,
     tags=['take-home'],
 ) as dag:
