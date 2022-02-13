@@ -92,16 +92,62 @@ Fork this repository and clone to your local environment
 - **Note:** If you are using Apple hardware with M1 processor, there is a common challenge with Docker. You can read more about it [here](https://javascript.plainenglish.io/which-docker-images-can-you-use-on-the-mac-m1-daba6bbc2dc5).
 
 ## Your notes (Readme.md) 
-@TODO: Add any additional notes / documentation in this file.
+
+Thoughts below.
 
 ### Time spent
-Give us a rough estimate of the time you spent working on this. If you spent time learning in order to do this project please feel free to let us know that too. This makes sure that we are evaluating your work fairly and in context. It also gives us the opportunity to learn and adjust our process if needed.
+> Give us a rough estimate of the time you spent working on this. If you spent time learning in order to do this project please feel free to let us know that too. This makes sure that we are evaluating your work fairly and in context. It also gives us the opportunity to learn and adjust our process if needed.
+
+About 3 hours total, spread out in chunks (might have been faster if I did it all continuously and didn't have to context switch back from other tasks):
+
+- A good chunk of time was spent on:
+    - Trying to understand the problem, the scope (asked questions via email)
+    - Refreshing Airflow knowledge (got burned because I forgot to define the Postgres connection in UI)
+    - Reading docs on Airflow and the API
+    - Reading through the docker-compose
+    - Forget the nuances of passing/accessing context/XCom, played around with it a bit
+
+- Probably spent a bit more time than necessary on structuring the files (did some juggling and mind changing on whether to write the SQL inline in the DAG files or make external) and adding type annotations
+
+- Spent time thinking:
+    - about the structure of the raw/staging table and the mart/modelled table
+    - idempotency, different approaches to achieve this, ease of maintenance
+
+- Remaining time coding
 
 ### Assumptions
-Did you find yourself needing to make assumptions to finish this? If so, what were they and how did they impact your design/code?
+> Did you find yourself needing to make assumptions to finish this? If so, what were they and how did they impact your design/code?
+
+Yes - lots. There was a lot of open endedness, and in practice, I'd be bothering the hell out of PM or stakeholder to refine these assumptions and really understand what is needed here.
+
+- It wasn't really clear how many cities or locations, and over what time frame you wanted the data pulled for and at what frequency. The API also has rate limits so I didn't want to run it over a period of time for testing. Ultimately I decided to assume (after checking in with Carly who relayed to Saeed) that a list of city IDs would be passed into the ingestion tasks, and that the list of said IDs wouldn't be too large to fit in memory. Performance might need to be considered depending on how frequently you wanted the API to run. In the email, you said "record per day", which seems sort of infrequent; I set up the schedule interval to be every 2 hours.
+
+- Idempotency and retry policy (especially if a failure happened) was something to think about; we'd also need to consider the gaps that would happen if we had multiple city IDs; the first city ID would get a weather earlier than the Nth; if N is large, then city N's API call might occur a fair bit later than the first city. For simplicity, I assumed we're OK with negligible delay between the cities. Also, I designed transformer to run independently to fetcher (i.e. transformer will be idempotent if fetcher does nothing or fails).
+
+- General note: I noticed some weirdness with the API; if I called on the same city a few seconds apart, sometimes the `dt` value on the second call would be *earlier* than the one on the first. The way I designed the ingestion/upsert into the table should handle this under the assumption that we're not caring about by the second resolution.
+
+- Persistence/fault tolerance; a common practice is to actually dump the ingestion step data into flat files in some storage (S3, say). Under my assumption that we'd be running on a not very large set of city IDs, at a not too frequent interval, I stuck with keeping things in memory. If things get really big, it might make sense to instead have the ingestion task simply stream to file(s), and then the loading could happen in a separate task or DAG at a later time in some batch manner (since at that point we've already stored the "true" data and can access it). I added the possibility to do this in a rudimentary manner via a flag to one of the DAG task callables. We could then use sensors to read from files instead of passing via memory.
+
+- I assumed the API would always return `id`, `dt`, and `timezone` in the payload, and that these are not null, which I feel are reasonable assumptions given the nature of the data. To give myself flexibility, we store the entire payload as a raw JSONB column too (a more ELT approach), which assumes that the payload is JSON serializable. We can then perform transformations inside the database itself instead with SQL, instead of having to manage brittle ETL code to account for possible future changes in the API payload shape (i.e. we just need to update our SQL to account for changes after some time, and the pipeline keeps running, instead of having it break or having to update code).
+
+- I assumed the composite primary key on the tables would be a sufficient enough index for our use cases and queries (get the weather of a city at a given time). This wouldn't be so much an issue with a DWH/OLAP type database like Snowflake or BigQuery. It's probably important to get this right near the creation of the table, as it's not always great (depending on the table) to add an index after the table is used in production and has grown big, as it can block writes (though we could build the indexes concurrently).
+
+- I assumed we could model our problems in one raw table and one mart/cleaned modelling table. The level of normalization to take depends on a lot of factors. I decided to keep things simple. If we wanted to get fancy we could use Kimball modelling to break out the city/weather/temperature dimensions out into separate dimension tables.
 
 ### Next steps
-Provide us with some notes about what you would do next if you had more time. Are there additional features that you would want to add? Specific improvements to your code you would make?
+> Provide us with some notes about what you would do next if you had more time. Are there additional features that you would want to add? Specific improvements to your code you would make?
+
+E2E tests of the actual pipeline, focusing on covering edge cases.
+
+Depending on need, investigate using Branching to cover certain failure cases.
+
+More logging, alert system.
+
+Further requirements gathering about the intended use case of the downstream dataset - access patterns, who specifically is using it, etc.
+
+Decide if we want to use something like an ExternalTaskSensor for custom dependency logic between fetcher and transformer.
 
 ### Instructions to the evaluator
-Provide any end user documentation you think is necessary and useful here
+
+The one test file assumes `pytest` is installed on the evaluator's machine (i.e. I'm not testing it using the docker container)
+
