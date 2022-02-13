@@ -45,6 +45,9 @@ with DAG(
         for city_id in city_ids:
             payload = extractor.get_current_weather(city_id=city_id)
             if payload:
+                # At this stage (didn't implement) we could implement
+                # some kind of schema validation (pydantic, etc.)
+                # to enforce what we expect to be defined from the payload.
                 rows.append((
                     payload['id'],
                     payload['dt'],
