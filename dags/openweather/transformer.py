@@ -1,44 +1,38 @@
 from datetime import datetime, timedelta
 
-# The DAG object; we'll need this to instantiate a DAG
 from airflow import DAG
-
-# Operators; we need this to operate!
 from airflow.providers.postgres.operators.postgres import PostgresOperator
 
-# These args will get passed on to each operator
-# You can override them on a per-task basis during operator initialization
+
 default_args = {
     'owner': 'airflow',
     'depends_on_past': False,
     'email': ['airflow@example.com'],
-    'retries': 1,
-    'retry_delay': timedelta(minutes=5)
+    'retries': 0,
+    'retry_delay': timedelta(minutes=1)
 }
+
 with DAG(
-        'transformer',
-        default_args=default_args,
-        description='To transform the raw current weather to a modeled dataset',
-        schedule_interval=timedelta(minutes=5),
-        start_date=datetime(2021, 1, 1),
-        catchup=False,
-        tags=['take-home'],
+    'transformer',
+    default_args=default_args,
+    description='To transform the raw current weather to a modeled dataset',
+    # Runs same time as the fetcher DAG, but we use
+    # ExternalTaskSensor to ensure dependency order.
+    start_date=datetime(2021, 1, 1, 0, 0, 0),
+    schedule_interval="0 */2 * * *",
+    catchup=False,
+    tags=['take-home'],
 ) as dag:
 
-    # @TODO: Fill in the below
-    t1 = PostgresOperator(
+    create_modeled_dataset_table = PostgresOperator(
         task_id="create_modeled_dataset_table",
-        sql="""
-            CREATE TABLE IF NOT EXISTS current_weather (
-           );
-          """,
+        sql="sql/create_current_weather_tbl.sql",
     )
 
-    # @TODO: Fill in the below
-    t2 = PostgresOperator(
+    transform_raw_into_modelled = PostgresOperator(
         task_id="transform_raw_into_modelled",
-        sql="""
-            SELECT * FROM raw_current_weather ...
-          """,
+        sql="sql/transform_raw_weather_to_current_weather.sql",
     )
-    t1 >> t2
+
+    create_modeled_dataset_table >> transform_raw_into_modelled
+
