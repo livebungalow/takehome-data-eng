@@ -56,6 +56,7 @@ x-airflow-common:
     AIRFLOW__CORE__DAGS_ARE_PAUSED_AT_CREATION: 'true'
     AIRFLOW__CORE__LOAD_EXAMPLES: 'true'
     AIRFLOW__API__AUTH_BACKEND: 'airflow.api.auth.backend.basic_auth'
+    OPEN_WEATHER_API_KEY: ${OPEN_WEATHER_API_KEY}
     _PIP_ADDITIONAL_REQUIREMENTS: ${_PIP_ADDITIONAL_REQUIREMENTS:-}
   volumes:
     - ./dags:/opt/airflow/dags
@@ -71,6 +72,8 @@ x-airflow-common:
 
 services:
   postgres:
+    ports:
+      - 5432:5432
     image: postgres:13
     environment:
       POSTGRES_USER: airflow
