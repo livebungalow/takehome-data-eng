@@ -48,8 +48,14 @@ with DAG(
         name='transform_t1_to_stage_city',
         _dag_id=DAG_ID
     )
-    t1 >> t2b >> t2a
-    # t1 >> [t2a, t2b], t3 >> t4 >> t5]
-    # t3: validation
-    # t4: upsert
-    # t5: ops update status
+    # Improvement, this should be conditional on how the tasks went
+    t3 = TransformerDagRunOperator.update_status(
+        task_id='ops_dag_transformer_success',
+        name='ops_transformer_update_status',
+        status='SUCCESS',
+        start_task_id='ops_dag_transformer_run_init',
+        _dag_id=DAG_ID,
+        fetcher_dag_id=FETCHER_DAG_ID
+    )
+
+    t1 >> [t2a, t2b] >> t3
