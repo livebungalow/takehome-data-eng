@@ -73,7 +73,7 @@ class UploadRawCurrentWeatherOperator(BaseOperator):
 
     def execute(self, context: Any):
         ti = context['task_instance']
-        run_id = ti.xcom_pull(task_ids='ops_dag_run_init', key='run_id')
+        run_id = ti.xcom_pull(task_ids='ops_dag_fetcher_run_init', key='run_id')
         pulled_data = ti.xcom_pull(task_ids='ingest_api_data', key='data')
 
         rows = 0
