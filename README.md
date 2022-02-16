@@ -138,6 +138,9 @@ Provide us with some notes about what you would do next if you had more time. Ar
 5. I added a place where data validation could be added, but no actual validation due to time constraints.
 6. A current limitation: Running transformer on default parameters only ingests the weather data from the last fetcher run. Should be expanded to all runs that have been fetched but not transformed.
 7. Users, roles and privileges
+8. General cleanup -- There are a lot of hardcoded ids and names. I would really like to clean these up. Right now, changing a task id could have dangerous unpredictable consequences.
+9. Tests
+10. Use of binding variables and avoiding string formatting sql queries 
 
 ### Instructions to the evaluator
 Provide any end user documentation you think is necessary and useful here
