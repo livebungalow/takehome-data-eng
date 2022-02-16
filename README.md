@@ -92,16 +92,52 @@ Fork this repository and clone to your local environment
 - **Note:** If you are using Apple hardware with M1 processor, there is a common challenge with Docker. You can read more about it [here](https://javascript.plainenglish.io/which-docker-images-can-you-use-on-the-mac-m1-daba6bbc2dc5).
 
 ## Your notes (Readme.md) 
-@TODO: Add any additional notes / documentation in this file.
+One thing that this is not taking into great consideration is permissioning.
+I tried to set up the objects in a way to make permissioning easier down the line. However, I had some trouble implementing it in postgres. As a result, there are some oddly placed workarounds.
+
+In order to get this to run, the following steps will need to be run:
+
+1. Run the following snippet:
+```sql
+CREATE SCHEMA AIRFLOW.WEATHER;
+CREATE USER dag_operator WITH PASSWORD 'dag_operator';
+
+set search_path to weather;
+GRANT USAGE ON SCHEMA WEATHER TO DAG_OPERATOR;
+ALTER USER dag_operator SET SEARCH_PATH = weather;
+```
+2. Create a connection in airflow using dag_operator
+3. Upgrade to head in alembic `alembic upgrade head`
+4. Grant privileges to dag_operator
+```sql
+grant usage, select on sequence dag_runs_run_id_seq to dag_operator;
+GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA WEATHER TO dag_operator;
+```
+
+From there, both the fetcher and transformer dags can be run.
+
 
 ### Time spent
 Give us a rough estimate of the time you spent working on this. If you spent time learning in order to do this project please feel free to let us know that too. This makes sure that we are evaluating your work fairly and in context. It also gives us the opportunity to learn and adjust our process if needed.
 
+This took a decent amount of time, probably on the order of 6-8 hours. 
+
 ### Assumptions
 Did you find yourself needing to make assumptions to finish this? If so, what were they and how did they impact your design/code?
 
+1. Target database is postgres out of convenience, but in an actual deployment, we would use a columnar database.
+2. Fetcher is being kept as a separate dag as its target would traditionally be a file store.
+3. No end user has asked for anything specific -- yet. The goal is to set the ground work that's easily scalable not just with quantity of data but also by unpredictability of stakeholder request.
+
 ### Next steps
 Provide us with some notes about what you would do next if you had more time. Are there additional features that you would want to add? Specific improvements to your code you would make?
+1. Logger settings in alembic need to be adjusted
+2. I set the ground work of notifications and monitoring, but not the actual implementation.
+3. The next layer of views for stakeholders as defined by business use cases. I would create views on top of the t2 tables and provision access to the views.
+4. Right now, the fetcher is bottlenecked by the number of calls it can make. If however, the bottleneck were to move to the amount of data within each call, this current implementation of row wise processing would be unperformant.
+5. I added a place where data validation could be added, but no actual validation due to time constraints.
+6. A current limitation: Running transformer on default parameters only ingests the weather data from the last fetcher run. Should be expanded to all runs that have been fetched but not transformed.
+7. Users, roles and privileges
 
 ### Instructions to the evaluator
 Provide any end user documentation you think is necessary and useful here
