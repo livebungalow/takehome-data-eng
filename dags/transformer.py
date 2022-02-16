@@ -6,6 +6,7 @@ from airflow import DAG
 # Operators; we need this to operate!
 from airflow.providers.postgres.operators.postgres import PostgresOperator
 from bungalow_operators.ops import TransformerDagRunOperator
+from bungalow_operators.weather import RawToStageCityOperator, RawToStageWeatherOperator
 from fetcher import FETCHER_DAG_ID
 
 # These args will get passed on to each operator
@@ -47,7 +48,8 @@ with DAG(
         name='transform_t1_to_stage_city',
         _dag_id=DAG_ID
     )
-    # t1 >> [t2a, t2b], t3 >> t4 >> t5
+    t1 >> t2b >> t2a
+    # t1 >> [t2a, t2b], t3 >> t4 >> t5]
     # t3: validation
     # t4: upsert
     # t5: ops update status

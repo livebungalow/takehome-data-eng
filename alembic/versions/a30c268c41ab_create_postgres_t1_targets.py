@@ -6,7 +6,6 @@ Create Date: 2022-02-14 16:33:04.844989
 
 """
 from logging import getLogger
-import os
 
 from alembic import op
 import sqlalchemy as sa
@@ -20,7 +19,6 @@ branch_labels = None
 depends_on = None
 
 logger = getLogger(revision)
-env = os.environ.get('ENV', '').upper()
 
 t1_table_name = 'raw_current_weather'
 dag_runs_table_name = 'dag_runs'

@@ -76,7 +76,7 @@ class UploadRawCurrentWeatherOperator(BaseOperator):
         run_id = ti.xcom_pull(task_ids='ops_dag_fetcher_run_init', key='run_id')
         pulled_data = ti.xcom_pull(task_ids='ingest_api_data', key='data')
 
-        rows = 0
+        row_count = 0
         parameters = []
         for location, data in pulled_data.items():
             ran_at = datetime.now()
@@ -86,8 +86,130 @@ class UploadRawCurrentWeatherOperator(BaseOperator):
                 location, data['id'], json.dumps(data)
             ]
             parameters += location_parameters
-            rows += 1
+            row_count += 1
 
         query = self.base_sql.format(target=self.target, columns_str=self.columns_str,
-                                     values=',\n'.join([self.base_values] * rows))
+                                     values=',\n'.join([self.base_values] * row_count))
         self.hook.run(query, parameters=parameters)
+
+
+class RawToStageOperator(BaseOperator):
+    primary_key_name = None
+    target = None
+
+    columns = []
+    base_sql = '''
+        INSERT INTO {target} ({columns_str})
+        VALUES
+        {values}
+        on conflict({conflict})
+        {action}
+        ;
+    '''
+
+    def __init__(self, name: str, _dag_id: str = None, conn_id: str = None,
+                 **kwargs):
+        super().__init__(**kwargs)
+        self.name = name
+        self._dag_id = _dag_id
+        self.hook = PostgresHook(postgres_conn_id=conn_id or DEFAULT_POSTGRES_CONN_ID)
+
+    def query_raw_data(self, run_id) -> Tuple[str, List[str]]:
+        raise NotImplementedError('[X] Must use child classes')
+
+    def validate_row(self, row) -> None:
+        # Write validations here, raising an exception if there is an error
+        pass
+
+    def query_upsert(self, row_count) -> str:
+        query = self.base_sql.format(target=self.target, columns_str=self.columns_str,
+                                     values=',\n'.join([self.base_values] * row_count),
+                                     conflict=self.primary_key_name,
+                                     action='do nothing')
+        return query
+
+    @property
+    def columns_str(self):
+        return ', '.join(self.columns)
+
+    @property
+    def base_values(self):
+        return '({})'.format(', '.join(['%s'] * len(self.columns)))
+
+    def execute(self, context: Any):
+        ti = context['task_instance']
+        # Should not be hard coded
+        fetcher_run_id = ti.xcom_pull(task_ids='ops_dag_transformer_run_init', key='fetcher_run_id')
+        logger.info('[+] fetcher_run_id: %s', fetcher_run_id)
+        delta_query, delta_params = self.query_raw_data(run_id=fetcher_run_id)
+
+        cur = self.hook.get_conn().cursor()
+        cur.execute(delta_query, delta_params)
+
+        row_count = 0
+        values_to_upsert = []
+        for row in cur:
+            try:
+                self.validate_row(row)
+                values_to_upsert += row
+                row_count += 1
+            except Exception as e:
+                # Future: Would be nice to be able to specify how to handle error
+                logger.error('[X] Error resolving for %s = %s. Skipping', self.primary_key_name,
+                             row[0])
+                logger.error(e)
+        upsert_query = self.query_upsert(row_count)
+        self.hook.run(upsert_query, parameters=values_to_upsert)
+
+
+class RawToStageCityOperator(RawToStageOperator):
+    primary_key_name = 'city_id'
+    target = 't2_cities'
+
+    columns = ['lake_id', 'city_id', 'country', 'timezone', 'lat', 'lon']
+
+    def query_raw_data(self, run_id) -> Tuple[str, List[str]]:
+        base_sql = '''
+        SELECT
+        lake_id
+        , city_id
+        , data -> 'sys' ->> 'country'     as country
+        , data ->> 'timezone'           as timezone
+        , data -> 'coord' ->> 'lat'     as lat
+        , data -> 'coord' ->> 'lon'     as lon
+        FROM raw_current_weather
+        WHERE run_id = %s
+        '''
+        return base_sql, [run_id]
+
+
+class RawToStageWeatherOperator(RawToStageOperator):
+    primary_key_name = 'sys_id'
+    target = 't2_weather'
+
+    columns = ['lake_id', 'sys_id', 'city_id', 'description', 'temp', 'humidity', 'pressure',
+               'temp_max', 'temp_min', 'feels_like', 'wind_deg', 'wind_speed',
+               'wind_gust', 'calculated_at', 'location']
+
+    def query_raw_data(self, run_id) -> Tuple[str, List[str]]:
+        base_sql = '''
+        SELECT
+        lake_id                                     as lake_id
+        , data -> 'sys' ->> 'id'                    as sys_id
+        , city_id                                   as city_id
+        , data -> 'weather' -> 0 ->> 'description'  as description
+        , data -> 'main' ->> 'temp'                 as temp
+        , data -> 'main' ->> 'humidity'             as humidity
+        , data -> 'main' ->> 'pressure'             as pressure
+        , data -> 'main' ->> 'temp_max'             as temp_max
+        , data -> 'main' ->> 'temp_min'             as temp_min
+        , data -> 'main' ->> 'feels_like'           as feels_like
+        , data -> 'wind' ->> 'deg'                  as wind_deg
+        , data -> 'wind' ->> 'speed'                as wind_speed
+        , data -> 'wind' ->> 'gust'                 as wind_gust
+        , calculated_at                             as calculated_at
+        , location                                  as location
+        FROM raw_current_weather
+        WHERE run_id = %s
+        '''
+        return base_sql, [run_id]
