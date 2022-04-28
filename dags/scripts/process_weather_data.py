@@ -8,7 +8,7 @@ import sys
 # and be retrieved from there when needed.
 lat = 37.7987
 lon = -122.46608
-owm_api_key = "***REMOVED***"
+owm_api_key = "7605c42cf507353c14e3e36e9ab14564"
 
 # Check if the lat/lon coordinates are in a valid range.
 # Latitudes have to be between -90 and 90, while longitudes have to be between -180 and 180.

@@ -94,14 +94,31 @@ Fork this repository and clone to your local environment
 ## Your notes (Readme.md) 
 @TODO: Add any additional notes / documentation in this file.
 
+The task, the way the DAGs were set up, seemed to indicate that we create the table and then insert into it directly, from the JSON reponse we get from the PythonOperator. My thought is that DDL operations should be independent of any orchestration and to create the table ahead of time and then run code to write into it. With this in mind, my Python script uses the Pandas library to create a dataframe from the API response and insert the record into the table. The modeled table - current_weather - is meant to be a reporting-ready table - with meaningful column names and some additional columns to have Fahrenheit versions of temperatures and wind speeds in miles per hour, in addition to the standard Celsius and meters per second, respectively. 
+
+For fetcher.py - Given the way the DAG is set up, I structured it so the raw table's DDL is the first step - so that the table is created - and the second step is the invocation to the Python script.
+For transformer.py - The first step creates the reporting-ready table and the second table writes into it selecting only those records that haven't been written into it yet.
+
 ### Time spent
 Give us a rough estimate of the time you spent working on this. If you spent time learning in order to do this project please feel free to let us know that too. This makes sure that we are evaluating your work fairly and in context. It also gives us the opportunity to learn and adjust our process if needed.
+
+Time spent - I spent about 10 hours in developing the solution and 3 hours troubleshooting an issue I was running into with Docker, spread across 3 days from Monday to Wednesday. I am not too familiar with Docker and so I might have spent less time debugging was I more familiar. The 10 hours included reading up documentation, testing out 2 approaches to determine which would easier/better, and learning exactly how to use json_normalize in Pandas.
 
 ### Assumptions
 Did you find yourself needing to make assumptions to finish this? If so, what were they and how did they impact your design/code?
 
+Assumptions - Given that we get a JSON body back, there were two options - write to Postgres directly and then deal with parsing it there, or figure out the schema ahead of time, parse it first and then write out to a structured table. I took a look at the JSON functions in Postgres and while technically possible, I could see that it would get gnarly very quickly if we went the SQL-only route of breaking up the JSON body. Added to this, was the consideration to take into account that not all fields that *could* be part of the response actually *would* be part of it. For example, if it is not raining in a particular place at the time we request weather for, it simply wouldn't show up in the response. Rather than handle all these cases in SQL, I decided to go the Python route.
+
+While we know that we use JSON format to have loosely structured data, we also know that OpenWeather has a set schema of all possible elements that would make up the response body. Using that, I created the raw_current_weather table, and included the raw JSON response as well, in case someone wants to access the raw JSON, as opposed to the broken up columns. I tested this with a few different places with rain and snow to confirm we see all elements and that I was setting the schema the right way. 
+
+In terms of the table design, I figured a modeled table would be one which we could point a dashboarding tool against and get insights, and with that in mind, I drop a few columns (id, icon etc) and rename a bunch of others, and transform a few more. One could argue that the transformation should/could be pushed down a level to the dashboarding layer, but it really depends on organizational needs, and either approach work and are equally valid, in my opinion. I chose to add extra columns to showcase that it could be done. 
+
+For data scientists or engineers, they can access the raw_current_weather table to either get all the raw columns, or work directly with the JSON body, if need be. Data analysts/BI developers can use the current_weather table to derive insights, and still have the flexibility to use SQL and query the raw table to get any bits of information not present in the modeled table. 
+
 ### Next steps
 Provide us with some notes about what you would do next if you had more time. Are there additional features that you would want to add? Specific improvements to your code you would make?
+
+Ideally, only a single DAG with two steps would exist - the first step would run the Python code and the second step would run the process_raw_weather_data.sql file. The creation of the tables would be completely behind the scenes and outside of Airflow's purview.
 
 ### Instructions to the evaluator
 Provide any end user documentation you think is necessary and useful here
